@@ -1,6 +1,5 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Repositories;
 
@@ -13,25 +12,25 @@ public class PropertiesRepository : IPropertiesRepository
         _dbContext = dbContext;
     }
 
-    public async Task Add(Property property)
+    public void Add(Property property)
     {
         _dbContext.Add(property);
-        await _dbContext.SaveChangesAsync();
+        _dbContext.SaveChanges();
     }
 
-    public Task<Property?> GetById(Guid id)
+    public Property? GetById(Guid id)
     {
-        return _dbContext.Properties.FirstOrDefaultAsync(p => p.Id == id);
+        return _dbContext.Properties.FirstOrDefault(p => p.Id == id);
     }
 
-    public Task<List<Property>> List()
+    public List<Property> List()
     {
-        return _dbContext.Properties.ToListAsync();
+        return _dbContext.Properties.ToList();
     }
 
-    public async Task Update(Property property)
+    public void Update(Property property)
     {
-        Property? existingProperty = await GetById(property.Id);
+        Property? existingProperty = GetById(property.Id);
 
         if (existingProperty is null)
         {
@@ -41,9 +40,9 @@ public class PropertiesRepository : IPropertiesRepository
         existingProperty.Name = property.Name;
     }
 
-    public async Task DeleteById(Guid id)
+    public void DeleteById(Guid id)
     {
-        Property? existingProperty = await GetById(id);
+        Property? existingProperty = GetById(id);
 
         if (existingProperty is null)
         {
@@ -51,6 +50,6 @@ public class PropertiesRepository : IPropertiesRepository
         }
 
         _dbContext.Properties.Remove(existingProperty);
-        await _dbContext.SaveChangesAsync();
+        _dbContext.SaveChanges();
     }
 }
