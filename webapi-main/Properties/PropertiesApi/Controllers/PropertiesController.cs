@@ -37,18 +37,18 @@ public class PropertiesController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll() 
+    public async Task<IActionResult> GetAll() 
     {
-        List<Domain.Entities.Property> props = _propertiesRepository.List();
+        List<Domain.Entities.Property> props = await _propertiesRepository.List();
         IEnumerable<Property> propertiesResponse = props.Select(p => new Property(p.Id, p.Name));
 
         return Ok(propertiesResponse);
     }
 
     [HttpGet("{propertyId:guid}")]
-    public IActionResult Get([FromRoute]Guid propertyId)
+    public async Task<IActionResult> Get([FromRoute]Guid propertyId)
     {
-        var property = _propertiesRepository.GetById(propertyId);
+        var property = await _propertiesRepository.GetById(propertyId);
         if (property is null) 
         { 
             return NotFound();
